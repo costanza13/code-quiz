@@ -1,0 +1,58 @@
+* {
+  box-sizing: border-box;
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
+
+header {
+  width: 100%;
+}
+
+#view-highscores {
+  color: rgb(83, 11, 116);
+  cursor: pointer;
+}
+
+#timer {
+  float: right;
+  text-align: right;
+}
+
+#page-content {
+  margin: 0 auto;
+  width: 90%;
+}
+
+#welcome {
+  text-align: center;
+}
+
+.btn {
+  background: rgb(83, 11, 116);
+  border: none;
+  border-radius: 10px;
+  color: #fff;
+  display: inline-block;
+  font-size: 1rem;
+  outline: none;
+  padding: 8px 12px;
+  position: relative;
+  top: -3px;
+}
+
+.btn:hover {
+  background: rgb(135, 41, 179);
+}
+
+@media screen and (min-width: 480px) {
+  #page-content {
+    width: 70%;
+  }  
+}
+
+
+@media screen and (min-width: 768px) {
+  #page-content {
+    width: 60%;
+    max-width: 600px;
+  }  
+}
