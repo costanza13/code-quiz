@@ -43,6 +43,11 @@ header {
   background: rgb(135, 41, 179);
 }
 
+.answer-btn {
+  display:block;
+  margin: 1px;
+}
+
 @media screen and (min-width: 480px) {
   #page-content {
     width: 70%;
