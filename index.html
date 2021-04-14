@@ -28,10 +28,28 @@
         </p>
         <button id="start-quiz" class="btn">Start Quiz</button>
       </div>
-    </section>
 
-    <section id="result">
+      <div id="quiz" class="hidden">
+      </div>
 
+      <div id="quiz-done" class="hidden">
+        <h2>All done!</h2>
+        <p>Your final score is <span id="final-score"></span></p>
+        <div id='save-score' class="hidden">
+          Enter your initials:
+          <input type="text" id="save-score-input" />
+          <button id="initials-submit" class="btn">Submit</button>
+        </div>
+      </div>
+
+      <div id="high-scores" class="hidden">
+        <h2>High Scores</h2>
+        <div id='scores-list'></div>
+        <button id="go-back" class="btn">Go Back</button>
+        <button id="clear-high-scores" class="btn">Go Back</button>
+      </div>
+
+      <div id="result" class="hidden"></div>  
     </section>
   </main>
 

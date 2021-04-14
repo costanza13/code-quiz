@@ -25,18 +25,25 @@ const quizQuestionsData = [
   },
 ];
 
+// global variables
 var highScores = [];
 var quizTimer = 0;
 var previousResult = 'na';
 var questionNumber = 0;
 var questionsElementsArray = [];
-var tick;
+var tick;  // for quiz timer interval
+
+// pre-built page elements
 var mainContentEl = document.querySelector('#main-content');
-var resultEl = document.querySelector('#result');
-var welcomeEl = document.querySelector('#welcome');
 var viewHighScoresEl = document.querySelector('#view-high-scores');
-var startQuizEl = document.querySelector('#start-quiz');
 var quizTimerEl = document.querySelector('#quiz-timer');
+var welcomeEl = document.querySelector('#welcome');
+var startQuizEl = document.querySelector('#start-quiz');
+var quizEl = document.querySelector('#quiz');
+var quizDoneEl = document.querySelector('#quiz-done');
+var highScoresEl = document.querySelector('#high-scores');
+var saveScoreEl = document.querySelector('#save-score');
+var resultEl = document.querySelector('#result');
 
 var initQuiz = function() {
   loadHighScores();
@@ -95,7 +102,22 @@ var createAnswerButtonsEl = function(answers) {
   return answersEl;
 }
 
+var showNextQuestion = function() {
+  if (questionNumber > 0) {
+    document.querySelector('.question-block').remove();
+  }
+  if (questionNumber < questionsElementsArray.length) {
+    // display question and answer buttons
+    quizEl.appendChild(questionsElementsArray[questionNumber]);
+  } else {
+    endQuiz(quizTimer);
+  }
+}
+
+
+/*** event handlers ***/
 var viewHighScoresHandler = function(event) {
+
   console.log('highScores', highScores);
 }
 
@@ -103,7 +125,7 @@ var startQuizHandler = function(event) {
   console.log('starting quiz');
 
   // hide the welcome message
-  welcomeEl.remove();
+  welcomeEl.classList.add('hidden');
 
   questionNumber = 0;
   // start the countdown timer
@@ -119,20 +141,11 @@ var startQuizHandler = function(event) {
     updateQuizTimerEl();
   }, 1000);
 
-  // enter the quiz questions loop
+  // enter the quiz questions "loop"
   showNextQuestion();
-}
 
-var showNextQuestion = function() {
-  if (questionNumber > 0) {
-    document.querySelector('.question-block').remove();
-  }
-  if (questionNumber < questionsElementsArray.length) {
-    // display question and answer buttons
-    mainContentEl.appendChild(questionsElementsArray[questionNumber]);
-  } else {
-    endQuiz(quizTimer);
-  }
+  // and show the quiz
+  quizEl.classList.remove('hidden');
 }
 
 var answerButtonHandler = function(event) {
@@ -165,8 +178,16 @@ var answerButtonHandler = function(event) {
 
 }
 
+var saveHighScoreHandler = function(event) {
+  console.log(this);
+};
+
 var endQuiz = function(score) {
   clearInterval(tick);
+
+  quizEl.classList.add('hidden');
+  quizDoneEl.classList.remove('hidden');
+  document.querySelector('#final-score').textContent = score;
 
   if (score) {
     console.log('enter high score');
@@ -179,8 +200,9 @@ var endQuiz = function(score) {
 
 
 // event listeners
-viewHighScoresEl.addEventListener("click", viewHighScoresHandler);
-startQuizEl.addEventListener("click", startQuizHandler);
+viewHighScoresEl.addEventListener('click', viewHighScoresHandler);
+startQuizEl.addEventListener('click', startQuizHandler);
+saveScoreEl.addEventListener('click', saveHighScoreHandler);
 
 
 // start the app
