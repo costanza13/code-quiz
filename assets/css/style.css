@@ -17,7 +17,7 @@ header {
   text-align: right;
 }
 
-#page-content {
+main {
   margin: 0 auto;
   width: 90%;
 }
@@ -49,14 +49,14 @@ header {
 }
 
 @media screen and (min-width: 480px) {
-  #page-content {
+  main {
     width: 70%;
   }  
 }
 
 
 @media screen and (min-width: 768px) {
-  #page-content {
+  main {
     width: 60%;
     max-width: 600px;
   }  
