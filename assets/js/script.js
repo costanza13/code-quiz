@@ -23,8 +23,8 @@ const quizQuestionsData = [
   {
     question: 'How is a JavaScript function declared?',
     answers: [
-      { answer: 'function functionName() {}', id: 1 },
-      { answer: 'var functionName = function() {}', id: 2 },
+      { answer: 'function myFunc()', id: 1 },
+      { answer: 'var myFunc = function()', id: 2 },
       { answer: 'both of the above', id: 3 },
       { answer: 'none of the above', id: 4 },
     ],
@@ -46,7 +46,7 @@ const quizQuestionsData = [
       { answer: 'for (i = 0; i < 5; i++)', id: 1 },
       { answer: 'while (i < 5)', id: 2 },
       { answer: 'loop (i [0...4])', id: 3 },
-      { answer: 'array.forEach(myFunction)', id: 4 },
+      { answer: 'array.forEach(myFunc)', id: 4 },
     ],
     correctId: 3
   },
@@ -180,6 +180,9 @@ var showNextQuestion = function() {
   } else {
     endQuiz();
   }
+
+  // to prevent lingering hover on touchscreens
+  resultEl.focus({preventScroll:true});
 };
 
 var endQuiz = function() {
@@ -236,14 +239,14 @@ var startQuizHandler = function(event) {
   // start the countdown timer
   quizTimer = QUIZ_TIME;
   updateQuizTimerEl();
-  tick = setInterval(function() {
-    if (quizTimer > 0) {
-      quizTimer--;
-    } else {
-      endQuiz();
-    }
-    updateQuizTimerEl();
-  }, 1000);
+  // tick = setInterval(function() {
+  //   if (quizTimer > 0) {
+  //     quizTimer--;
+  //   } else {
+  //     endQuiz();
+  //   }
+  //   updateQuizTimerEl();
+  // }, 1000);
 
   // enter the quiz questions "loop"
   showNextQuestion();

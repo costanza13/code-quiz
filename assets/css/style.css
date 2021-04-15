@@ -42,7 +42,7 @@ main {
   border-radius: 5px;
   color: #fff;
   display: inline-block;
-  font-size: 1rem;
+  font-size: .9rem;
   outline: none;
   padding: 2px 12px;
   position: relative;
@@ -51,6 +51,11 @@ main {
 
 .btn:hover {
   background: rgb(218, 207, 248);
+}
+
+.btn:active {
+  background: rgb(83, 11, 116);
+  border: 2px solid lightskyblue;
 }
 
 .answer-btn {
