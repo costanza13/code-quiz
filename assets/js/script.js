@@ -1,38 +1,71 @@
-// initalize some useful variables
-const QUIZ_TIME = 15;  // how long the quiz lasts, in seconds
-const QUIZ_PENALTY = 10; // how many seconds to subtract for an incorrect answer
-
+// questions array
 const quizQuestionsData = [
   {
-    question: 'This is the first question.',
+    question: 'What typeof value does the JavaScript function confirm() return?',
     answers: [
-      { answer: 'answer 1.1', id: 1 },
-      { answer: 'answer 1.2', id: 2 },
-      { answer: 'answer 1.3', id: 3 },
-      { answer: 'answer 1.4', id: 4 },
+      { answer: 'string', id: 1 },
+      { answer: 'number', id: 2 },
+      { answer: 'boolean', id: 3 },
+      { answer: 'undefined', id: 4 },
     ],
     correctId: 3
   },
   {
-    question: 'This is the second question.',
+    question: 'Which can you use to determine the type of a variable?',
     answers: [
-      { answer: 'answer 2.1', id: 1 },
-      { answer: 'answer 2.2', id: 2 },
-      { answer: 'answer 2.3', id: 3 },
-      { answer: 'answer 2.4', id: 4 },
+      { answer: 'getType(var)', id: 1 },
+      { answer: 'typeof var', id: 2 },
+      { answer: 'var.type()', id: 3 },
+      { answer: 'var.className', id: 4 },
     ],
     correctId: 2
   },
+  {
+    question: 'How is a JavaScript function declared?',
+    answers: [
+      { answer: 'function functionName() {}', id: 1 },
+      { answer: 'var functionName = function() {}', id: 2 },
+      { answer: 'both of the above', id: 3 },
+      { answer: 'none of the above', id: 4 },
+    ],
+    correctId: 3
+  },
+  {
+    question: 'How can you output messages to the console?',
+    answers: [
+      { answer: 'console.print(msg)', id: 1 },
+      { answer: 'echo msg', id: 2 },
+      { answer: 'msg.console()', id: 3 },
+      { answer: 'console.log(msg)', id: 4 },
+    ],
+    correctId: 4
+  },
+  {
+    question: 'Which of the following is <em>not</em> a valid JavaScript loop?',
+    answers: [
+      { answer: 'for (i = 0; i < 5; i++)', id: 1 },
+      { answer: 'while (i < 5)', id: 2 },
+      { answer: 'loop (i [0...4])', id: 3 },
+      { answer: 'array.forEach(myFunction)', id: 4 },
+    ],
+    correctId: 3
+  },
 ];
+// initalize some useful constants
+const QUIZ_QUESTION_COUNT = quizQuestionsData.length;
+const TIME_PER_QUESTION = 15;  // time in seconds
+const QUIZ_TIME = QUIZ_QUESTION_COUNT * TIME_PER_QUESTION;  // how long the quiz lasts, in seconds
+const QUIZ_PENALTY = TIME_PER_QUESTION; // how many seconds to subtract for an incorrect answer
+
 
 // global variables
 var highScores = [];
 var quizTimer = 0;
 var questionNumber = 0;
+var numCorrect = 0;
 var questionsElementsArray = [];
 var tick;  // for quiz timer interval
 var resultTimer;  // for question result message timeout
-
 
 
 // pre-built page elements
@@ -63,6 +96,7 @@ var initQuiz = function() {
   loadHighScores();  // might not need this one
   quizTimer = 0;
   questionNumber = 0;
+  numCorrect = 0;
   updateQuizTimerEl();
   createQuestionsArray();
 };
@@ -144,24 +178,25 @@ var showNextQuestion = function() {
     // display question and answer buttons
     quizEl.appendChild(questionsElementsArray[questionNumber]);
   } else {
-    endQuiz(quizTimer);
+    endQuiz();
   }
 };
 
-var endQuiz = function(score) {
+var endQuiz = function() {
+  // calculate final score based on number of correct answers
+  var finalScore = (numCorrect / questionsElementsArray.length) * 100;
+
   clearInterval(tick);
 
   quizEl.classList.add('hidden');
   quizDoneEl.classList.remove('hidden');
-  document.querySelector('#final-score').textContent = score;
+  document.querySelector('#final-score').textContent = finalScore;
 
-  if (score) {
+  if (finalScore) {
     saveScoreEl.classList.remove('hidden');
   } else {
     document.querySelector('#no-score').classList.remove('hidden');
   }
-  console.log('done');
-  console.log('score: ', score);
 };
 
 var showHighScores = function() {
@@ -194,8 +229,6 @@ var showHighScores = function() {
 /*** event handlers ***/
 
 var startQuizHandler = function(event) {
-  console.log('starting quiz');
-
   // hide the welcome message
   welcomeEl.classList.add('hidden');
 
@@ -206,9 +239,8 @@ var startQuizHandler = function(event) {
   tick = setInterval(function() {
     if (quizTimer > 0) {
       quizTimer--;
-      console.log('tick');
     } else {
-      endQuiz(0);
+      endQuiz();
     }
     updateQuizTimerEl();
   }, 1000);
@@ -230,6 +262,7 @@ var answerButtonHandler = function(event) {
   // display the result of the previous question and update timer if incorrect
   if (answerId === quizQuestionsData[questionNumber].correctId) {
     resultEl.textContent = 'Correct!';
+    numCorrect++;
   } else {
     resultEl.textContent = 'Wrong!';
     quizTimer -= QUIZ_PENALTY;
@@ -259,9 +292,9 @@ var saveHighScoreHandler = function(event) {
   }
   var initials = this.querySelector('#save-score-input').value;
   this.querySelector('#save-score-input').value = '';
-  var score = document.querySelector('#final-score').textContent;
+  var finalScore = document.querySelector('#final-score').textContent;
 
-  addHighScore(initials, score);
+  addHighScore(initials, finalScore);
   showHighScores();
 };
 
@@ -279,33 +312,5 @@ goBackButtonEl.addEventListener('click', initQuiz);
 tryAgainButtonEl.addEventListener('click', initQuiz);
 
 
-// start the app
+// start the app on load
 initQuiz();
-
-
-// 1) welcome user (display welcome screen)
-//     a) load high scores array from local storage
-// 2) if start button is clicked, start the quiz
-//     a) reset time counter to max time (75 seconds)
-//     b) start countdown interval to decrement counter
-//     c) enter quiz loop
-// 3) quiz loop: loop over quiz questions
-//     a) present question
-//     b) present buttons for multiple choice answers
-//     c) capture the user's answer and compare it to the correct answer
-//     d) if incorrect
-//          - subtract 10 seconds from time counter
-//     e) jump to next question
-//     f) flash result of previous answer below question for ~1 second
-// 4) when no more questions or time counter reaches 0, end quiz
-//     a) capture and display score (counter value)
-//     b) flash result of previous answer below "all done"/score
-//     c) if score > 0, prompt user for initials
-//     d) when initials are entered
-//          - save score in high scores array
-//          - save high scores array in local storage
-//          - show high scores
-// 5) show high scores
-//     a) display high scores, sorted by score
-//     b) include a "go back" button, leading to the welcome screen
-//     c) include a "clear high scores" button, which empties the high scores array and clears it from local storage

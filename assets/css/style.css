@@ -58,6 +58,10 @@ main {
   margin: 1px;
 }
 
+#final-score {
+  font-weight: bold;
+}
+
 #scores-list {
   list-style: none;
   padding-inline-start: 0;
