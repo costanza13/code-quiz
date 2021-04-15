@@ -8,6 +8,11 @@
 }
 
 header {
+  height: 2rem;
+  width: 100%;
+}
+
+#top-bar {
   width: 100%;
 }
 
@@ -22,7 +27,8 @@ header {
 }
 
 main {
-  margin: 0 auto;
+  margin: 40px auto;
+  padding: 20px;
   width: 90%;
 }
 
@@ -33,23 +39,42 @@ main {
 .btn {
   background: rgb(83, 11, 116);
   border: none;
-  border-radius: 10px;
+  border-radius: 5px;
   color: #fff;
   display: inline-block;
   font-size: 1rem;
   outline: none;
-  padding: 8px 12px;
+  padding: 2px 12px;
   position: relative;
-  top: -3px;
+  top: 1px;
 }
 
 .btn:hover {
-  background: rgb(135, 41, 179);
+  background: rgb(218, 207, 248);
 }
 
 .answer-btn {
   display:block;
   margin: 1px;
+}
+
+#scores-list {
+  list-style: none;
+  padding-inline-start: 0;
+}
+
+.high-scores-item {
+  background: rgb(235, 225, 252);
+  margin: 2px;
+  padding: 5px;
+}
+
+#result {
+  border-top: 2px groove rgb(238, 237, 240);
+  color: grey;
+  font-style: italic;
+  margin-top: 20px;
+  padding-top: 10px;
 }
 
 @media screen and (min-width: 480px) {
