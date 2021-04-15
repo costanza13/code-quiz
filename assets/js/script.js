@@ -239,14 +239,14 @@ var startQuizHandler = function(event) {
   // start the countdown timer
   quizTimer = QUIZ_TIME;
   updateQuizTimerEl();
-  // tick = setInterval(function() {
-  //   if (quizTimer > 0) {
-  //     quizTimer--;
-  //   } else {
-  //     endQuiz();
-  //   }
-  //   updateQuizTimerEl();
-  // }, 1000);
+  tick = setInterval(function() {
+    if (quizTimer > 0) {
+      quizTimer--;
+    } else {
+      endQuiz();
+    }
+    updateQuizTimerEl();
+  }, 1000);
 
   // enter the quiz questions "loop"
   showNextQuestion();
