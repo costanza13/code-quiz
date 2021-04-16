@@ -180,9 +180,6 @@ var showNextQuestion = function() {
   } else {
     endQuiz();
   }
-
-  // to prevent lingering hover on touchscreens
-  resultEl.focus({preventScroll:true});
 };
 
 var endQuiz = function() {
@@ -306,6 +303,17 @@ var clearHighScoresHandler = function(event) {
   showHighScores();
 };
 
+// disable hover effect for buttons on touchscreens
+var disableHover = function(event) {
+  var touchStyleEl = document.createElement('style');
+  touchStyleEl.setAttribute('type', 'text/css');
+  touchStyleEl.textContent = ".btn:hover { background: rgb(83, 11, 116); }";
+  document.querySelector('#main-content').insertBefore(touchStyleEl, welcomeEl);
+  console.log(this);
+  console.log(document.querySelector('#main-content'));
+  console.log(touchStyleEl);
+}
+
 // event listeners
 viewHighScoresEl.addEventListener('click', viewHighScoresHandler);
 startQuizEl.addEventListener('click', startQuizHandler);
@@ -313,6 +321,9 @@ saveScoreEl.addEventListener('click', saveHighScoreHandler);
 clearHighScoresButtonEl.addEventListener('click', clearHighScoresHandler);
 goBackButtonEl.addEventListener('click', initQuiz);
 tryAgainButtonEl.addEventListener('click', initQuiz);
+
+// detect if using touch
+startQuizEl.addEventListener('touchstart', disableHover, { passive: true, once: true });
 
 
 // start the app on load
