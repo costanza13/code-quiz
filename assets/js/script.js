@@ -21,7 +21,7 @@ const quizQuestionsData = [
     correctId: 2
   },
   {
-    question: 'Which of the following is not a valid JavaScript function declaration?',
+    question: 'Which of the following is <strong><em>not</em></strong> a valid JavaScript function declaration?',
     answers: [
       { answer: 'function myFunc() {...}', id: 1 },
       { answer: 'var myFunc = function() {...}', id: 2 },
