@@ -60,7 +60,7 @@ main {
 
 .answer-btn {
   display:block;
-  margin: 4px 0;
+  margin: 6px 0;
   padding-left: 10px;
 }
 
@@ -105,6 +105,6 @@ main {
   }
 
   .answer-btn {
-    margin: 1px;
+    margin: 4px;
   }
 }
