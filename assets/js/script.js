@@ -41,7 +41,7 @@ const quizQuestionsData = [
     correctId: 4
   },
   {
-    question: 'Which of the following is <em>not<em> a valid JavaScript loop?',
+    question: 'Which of the following is <strong><em>not</em></strong> a valid JavaScript loop?',
     answers: [
       { answer: 'for (i = 0; i < 5; i++)', id: 1 },
       { answer: 'while (i < 5)', id: 2 },
