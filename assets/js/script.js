@@ -1,17 +1,17 @@
 // questions array
 const quizQuestionsData = [
   {
-    question: 'What typeof value does the JavaScript function confirm() return?',
+    question: 'What data type does the JavaScript function confirm() return?',
     answers: [
-      { answer: 'string', id: 1 },
-      { answer: 'number', id: 2 },
-      { answer: 'boolean', id: 3 },
+      { answer: 'String', id: 1 },
+      { answer: 'Number', id: 2 },
+      { answer: 'Boolean', id: 3 },
       { answer: 'undefined', id: 4 },
     ],
     correctId: 3
   },
   {
-    question: 'Which can you use to determine the type of a variable?',
+    question: 'Which of the following can you use to determine the type of a variable?',
     answers: [
       { answer: 'getType(var)', id: 1 },
       { answer: 'typeof var', id: 2 },
@@ -21,12 +21,12 @@ const quizQuestionsData = [
     correctId: 2
   },
   {
-    question: 'How is a JavaScript function declared?',
+    question: 'Which of the following is not a valid JavaScript function declaration?',
     answers: [
-      { answer: 'function myFunc()', id: 1 },
-      { answer: 'var myFunc = function()', id: 2 },
-      { answer: 'both of the above', id: 3 },
-      { answer: 'none of the above', id: 4 },
+      { answer: 'function myFunc() {...}', id: 1 },
+      { answer: 'var myFunc = function() {...}', id: 2 },
+      { answer: 'function myFunc = {...}', id: 3 },
+      { answer: 'const myFunc = () => {...}', id: 4 },
     ],
     correctId: 3
   },
@@ -41,7 +41,7 @@ const quizQuestionsData = [
     correctId: 4
   },
   {
-    question: 'Which of the following is *not* a valid JavaScript loop?',
+    question: 'Which of the following is <em>not<em> a valid JavaScript loop?',
     answers: [
       { answer: 'for (i = 0; i < 5; i++)', id: 1 },
       { answer: 'while (i < 5)', id: 2 },
@@ -50,9 +50,39 @@ const quizQuestionsData = [
     ],
     correctId: 3
   },
+  {
+    question: 'How do you access a JavaScript object\'s property?',
+    answers: [
+      { answer: 'obj->propName', id: 1 },
+      { answer: 'obj{propName}', id: 2 },
+      { answer: 'obj.propName{}', id: 3 },
+      { answer: 'obj.propName', id: 4 },
+    ],
+    correctId: 4
+  },
+  {
+    question: 'Which statement will evaluate to true?',
+    answers: [
+      { answer: '0 == false', id: 1 },
+      { answer: '1 === true', id: 2 },
+      { answer: 'true === \'true\'', id: 3 },
+      { answer: '42 != \'42\'', id: 4 },
+    ],
+    correctId: 1
+  },
+  {
+    question: 'How can you calculate the integer portion of a quotient?',
+    answers: [
+      { answer: 'q = x % y', id: 1 },
+      { answer: 'q = x // y', id: 2 },
+      { answer: 'q = Math.floor(x / y)', id: 3 },
+      { answer: 'q = Math.ceil(x / y)', id: 4 },
+    ],
+    correctId: 3
+  },
 ];
 // initalize some useful constants
-const QUIZ_QUESTION_COUNT = quizQuestionsData.length;
+const QUIZ_QUESTION_COUNT = 5;
 const TIME_PER_QUESTION = 15;  // time in seconds
 const QUIZ_TIME = QUIZ_QUESTION_COUNT * TIME_PER_QUESTION;  // how long the quiz lasts, in seconds
 const QUIZ_PENALTY = TIME_PER_QUESTION; // how many seconds to subtract for an incorrect answer
@@ -63,7 +93,8 @@ var highScores = [];
 var quizTimer = 0;
 var questionNumber = 0;
 var numCorrect = 0;
-var questionsElementsArray = [];
+var questionElementsArray = [];
+var selectedQuestionsData = [];
 var tick;  // for quiz timer interval
 var resultTimer;  // for question result message timeout
 
@@ -83,6 +114,17 @@ var goBackButtonEl = document.querySelector('#go-back');
 var tryAgainButtonEl = document.querySelector('#try-again');
 var clearHighScoresButtonEl = document.querySelector('#clear-high-scores');
 
+var shuffle = function(arr) {
+  var shuffled = [];
+  while (arr.length > 1) {
+    var idx = Math.floor(Math.random() * arr.length);
+    shuffled.push(arr.splice(idx, 1)[0]);
+  }
+  shuffled.push(arr[0]);
+
+  return shuffled;
+};
+
 var initQuiz = function() {
   topBarEl.classList.remove('hidden');
   welcomeEl.classList.remove('hidden');
@@ -98,7 +140,7 @@ var initQuiz = function() {
   questionNumber = 0;
   numCorrect = 0;
   updateQuizTimerEl();
-  createQuestionsArray();
+  prepareQuestions();
 };
 
 var loadHighScores = function() {
@@ -129,11 +171,24 @@ var updateQuizTimerEl = function() {
   quizTimerEl.textContent = quizTimer;
 };
 
-var createQuestionsArray = function() {
-  questionsElementsArray = [];
+var prepareQuestions = function() {
+  // select QUIZ_QUESTION_COUNT questions, randomly
+  selectedQuestionsData = JSON.parse(JSON.stringify(quizQuestionsData));  // clone the full original questions data array
+  while (selectedQuestionsData.length > QUIZ_QUESTION_COUNT) {
+    var idx = Math.floor(Math.random() * selectedQuestionsData.length);
+    selectedQuestionsData.splice(idx, 1);
+  }
+
+  // suffle each question's answers
+  for (var i = 0; i < selectedQuestionsData.length; i++) {
+    selectedQuestionsData[i].answers = shuffle(selectedQuestionsData[i].answers);
+  }
+
+  // build question elements
+  questionElementsArray = [];
 
   // for each question
-  for (var i = 0; i < quizQuestionsData.length; i++) {
+  for (var i = 0; i < selectedQuestionsData.length; i++) {
     // create an element to encapsulate the question and associated answer buttons
     var questionBlockEl = document.createElement('div');
     questionBlockEl.className = 'question-block';
@@ -142,15 +197,15 @@ var createQuestionsArray = function() {
     var questionEL = document.createElement('p');
     questionEL.className = 'question';
     questionEL.setAttribute('data-question-id', i);
-    questionEL.textContent = quizQuestionsData[i].question;
+    questionEL.innerHTML = selectedQuestionsData[i].question;
     questionBlockEl.appendChild(questionEL);
 
     // add the answers
-    var answersEl = createAnswerButtonsEl(quizQuestionsData[i].answers);
+    var answersEl = createAnswerButtonsEl(selectedQuestionsData[i].answers);
     questionBlockEl.appendChild(answersEl);
 
     // add the question element to the question elements array
-    questionsElementsArray.push(questionBlockEl);
+    questionElementsArray.push(questionBlockEl);
   }
 };
 
@@ -174,9 +229,9 @@ var showNextQuestion = function() {
   if (oldQuestion) {
     oldQuestion.remove();
   }
-  if (questionNumber < questionsElementsArray.length) {
+  if (questionNumber < questionElementsArray.length) {
     // display question and answer buttons
-    quizEl.appendChild(questionsElementsArray[questionNumber]);
+    quizEl.appendChild(questionElementsArray[questionNumber]);
   } else {
     endQuiz();
   }
@@ -184,7 +239,7 @@ var showNextQuestion = function() {
 
 var endQuiz = function() {
   // calculate final score based on number of correct answers
-  var finalScore = (numCorrect / questionsElementsArray.length) * 100;
+  var finalScore = Math.ceil((numCorrect / questionElementsArray.length) * 100);
 
   clearInterval(tick);
 
@@ -256,11 +311,10 @@ var answerButtonHandler = function(event) {
   // capture answer
   var answerId = parseInt(event.target.getAttribute('data-answer-id'));
   var questionId = parseInt(document.querySelector('.question').getAttribute('data-question-id'));
-  console.log('question', questionId, 'answer', answerId, 'correct answer', quizQuestionsData[questionNumber].correctId);
 
   // compare it with correct answer
   // display the result of the previous question and update timer if incorrect
-  if (answerId === quizQuestionsData[questionNumber].correctId) {
+  if (answerId === selectedQuestionsData[questionNumber].correctId) {
     resultEl.textContent = 'Correct!';
     numCorrect++;
   } else {
@@ -309,9 +363,6 @@ var disableHover = function(event) {
   touchStyleEl.setAttribute('type', 'text/css');
   touchStyleEl.textContent = ".btn:hover { background: rgb(83, 11, 116); }";
   document.querySelector('#main-content').insertBefore(touchStyleEl, welcomeEl);
-  console.log(this);
-  console.log(document.querySelector('#main-content'));
-  console.log(touchStyleEl);
 }
 
 // event listeners
